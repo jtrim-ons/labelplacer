@@ -2,6 +2,10 @@
 
 > A simple label placement algorithm for line charts
 
+This module is useful for finding non-overlapping y-positions for the series
+labels on a line chart.  The positions calculated are similar to those on
+[Our World in Data's charts](https://ourworldindata.org/owid-grapher).
+
 ## Install
 
 ```
@@ -13,27 +17,45 @@ $ npm install labelplacer
 ```js
 import labelplacer from 'labelplacer';
 
-labelplacer('unicorns');
-//=> 'unicorns & rainbows'
+const elements = [
+    {targetY: 2, label: 'label0', height: 10},
+    {targetY: 5, label: 'label1', height: 10},
+    {targetY: 50, label: 'label2', height: 10},
+    {targetY: 80, label: 'label2', height: 10}
+];
+
+const bounds = [0, 100];
+
+labelplacer(elements, bounds, d => d.targetY, d => d.height);
+//=> [5, 15, 50, 80]
 ```
 
 ## API
 
-### labelplacer(input, options?)
+### labelplacer(data, bounds, targetYFn, heightFn)
 
-#### input
+#### data
 
-Type: `string`
+Type: `array`
 
-Lorem ipsum.
+An array of data, with each element corresponding to one label.
 
-#### options
+#### bounds
 
-Type: `object`
+Type: `array`
 
-##### foo
+A two-element array containing the minimum and maximum y values.
 
-Type: `boolean`\
-Default: `false`
+#### targetYFn
 
-Lorem ipsum.
+Type: `function`
+
+A function that takes and element of `data` and returns the target y position
+for the vertical centre of the label.
+
+#### heightFn
+
+Type: `function`
+
+A function that takes and element of `data` and returns the height of the
+label.
